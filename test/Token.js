@@ -115,6 +115,42 @@ contract('Token', function(accounts) {
       });
   });
 
+  it('approves tokens for delegated transfer', function() {
+    return Token.deployed()
+      .then(function(instance) {
+        tokenInstance = instance;
+        return tokenInstance.approve.call(accounts[1], 100);
+      })
+      .then(function(success) {
+        assert.equal(success, true, 'it returns true when successful');
+        return tokenInstance.approve(accounts[1], 100);
+      })
+      .then(function(receipt) {
+        assert.equal(receipt.logs.length, 1, 'triggers one event');
+        assert.equal(
+          receipt.logs[0].event,
+          'Approval',
+          'should be the "Approval" event',
+        );
+        assert.equal(
+          receipt.logs[0].args._owner,
+          accounts[0],
+          'logs the account the tokens are authorized by',
+        );
+        assert.equal(
+          receipt.logs[0].args._spender,
+          accounts[1],
+          'logs the account the tokens are authorized to',
+        );
+        assert.equal(
+          receipt.logs[0].args._value.toNumber(),
+          100,
+          'logs the transfer amount',
+        );
+        return tokenInstance.allowance(accounts[0], accounts[1]);
+      });
+  });
+
   // it('transfers ownership of tokens', function() {
   // return Token.deployed().then(function(instance) {
   // tokenInstance = instance;
