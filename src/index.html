@@ -10,28 +10,69 @@
   </head>
   <body>
     <div class="container">
-      <h1>Test Token Sale</h1>
+      <h1 class="mt-4 display-4">Test Faucet</h1>
+      <hr>
 
-      <div id="loader"><p>Loading...</p></div>
+      <div id="loader" style="display:none;"><p>Loading...</p></div>
 
+      <div id="content">
+        <div class="alert alert-primary">
+          <dl class="row">
+            <dt class="col-sm-3">Token Price</dt>
+            <dd class="col-sm-9"><span id="tokenPrice">0</span> eth</dd>
 
-      <p>Token Price: <span class="token-price">0</span></p>
-      <p>Total Supply: <span class="total-supply">0</span></p>
-      <p>Tokens Sold: <span class="tokens-sold">0</span></p>
-      <p>Your holdings: <span class="token-balance">0</span> TEST</p>
-      <p>Your address: <span id="accountAddress">0</span></p>
+            <dt class="col-sm-3">Token Supply</dt>
+            <dd class="col-sm-9"><span id="tokensAvailable">0</span></dd>
 
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+            <dt class="col-sm-3">Tokens Sold</dt>
+            <dd class="col-sm-9"><span id="tokensSold">0</span></dd>
+
+            <dt class="col-sm-3">Your Holdings</dt>
+            <dd class="col-sm-9"><span id="balance">0</span> TEST</dd>
+          </dl>
+        </div>
+        <div class="alert alert-warning">
+          <dl class="row">
+            <dt class="col-sm-3">Your Metamask Address</dt>
+            <dd class="col-sm-9"><span id="accountAddress">0x0</span></dd>
+
+            <dt class="col-sm-3">Token Contract Address</dt>
+            <dd class="col-sm-9"><span id="tokenAddress">0x0</span></dd>
+
+            <dt class="col-sm-3">Token Sale Contract Address</dt>
+            <dd class="col-sm-9"><span id="tokenSaleAddress">0x0</span></dd>
+          </dl>
+        </div>
+
+        <!--div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+        </div-->
+
+        <hr>
+
+        <form action="#" id="form" onSubmit="App.buyTokens(); return false">
+          <div class="form-group">
+            <label for="numberOfTokens">Buy Tokens</label>
+            <input type="number" class="form-control" id="numberOfTokens" value="1" min="1" pattern="[0-9]"/>
+          </div>
+          <button type="submit" class="btn btn-primary">Buy</button>
+        </form>
+
+        <hr>
+
+        <button type="button" class="btn btn-primary">Buy 10 tokens</button>
+        <button type="button" class="btn btn-primary">Buy 20 tokens</button>
+        <button type="button" class="btn btn-primary">Buy 100 tokens</button>
       </div>
 
-      <form action="#">
-        <div class="form-group">
-          <label for="inputAmount">Buy Tokens</label>
-          <input type="number" class="form-control" id="inputAmount" value="1" min="1" pattern="[0-9]"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Buy</button>
-      </form>
+      <hr>
+
+      <h2 class="display-5 my-4">Transactions Log</h2>
+
+      <div class="card">
+        <ul class="list-group list-group-flush" id="transactionsLog">
+        </ul>
+      </div>
 
     </div>
 

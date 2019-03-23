@@ -62,32 +62,4 @@ contract('TokenSale', function(accounts) {
       assert(error.message.indexOf('revert') >= 0, 'cannot purchase more tokens than available');
     });
   });
-
-
-  it('ends token sale', function() {
-    return Token.deployed().then(function(instance) {
-      // Grab token instance
-      tokenInstance = instance;
-      return TokenSale.deployed();
-    }).then(function(instance) {
-      // Grab token sale instance
-      tokenSaleInstance = instance;
-      // Try to end the sale from someone other than admin
-      return tokenSaleInstance.endSale({from: buyer})
-    }).then(assert.fail).catch(function(error){
-      assert(error.message.indexOf('revert') >= 0, "errors when non admin tries to end sale")
-      // End sale as admin
-      return tokenSaleInstance.endSale({from: admin})
-    }).then(function(receipt) {
-      return tokenInstance.balanceOf(admin)
-    }).then(function(balance) {
-      // spends 25100 more tokens for some reason
-      assert.equal(balance.toNumber(), 999990, "returns unsold tokens to admin")
-      // check token price was reset when self destruct called
-      return tokenSaleInstance.tokenPrice()
-    }).then(function(price) {
-      assert.equal(price, 0, "token price was reset")
-    })
-  });
-
 });

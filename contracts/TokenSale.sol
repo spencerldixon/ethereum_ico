@@ -24,18 +24,12 @@ contract TokenSale {
   }
 
   function buyTokens(uint256 _numberOfTokens) public payable {
-    require(msg.value == multiply(_numberOfTokens, tokenPrice));
-    require(tokenContract.balanceOf(address(this)) >= _numberOfTokens);
-    require(tokenContract.transfer(msg.sender, _numberOfTokens));
+    require(msg.value == multiply(_numberOfTokens, tokenPrice)); // Can't under pay or over pay for tokens
+    require(tokenContract.balanceOf(address(this)) >= _numberOfTokens); // balance of this contract, must be greater than the amount of tokens attempted to purchase
+    require(tokenContract.transfer(msg.sender, _numberOfTokens)); // require the transfer to be successful
 
     tokensSold += _numberOfTokens;
 
     emit Sell(msg.sender, _numberOfTokens);
-  }
-
-  function endSale() public {
-    require(msg.sender == admin);
-    require(tokenContract.transfer(admin, tokenContract.balanceOf(address(this))));
-    // admin.transfer(address(this).balance);
   }
 }
