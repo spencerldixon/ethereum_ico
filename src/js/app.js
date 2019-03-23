@@ -5,9 +5,10 @@ App = {
   loading: false,
   tokenPrice: 1000000000000000,
   tokensSold: 0,
-  tokensAvailable: 750000,
+  tokenSupply: 0,
   tokenSaleAddress: '0x0',
   tokenAddress: '0x0',
+  tokenSymbol: "???",
   balance: 0,
   init: function() {
     console.log("app initialised");
@@ -81,7 +82,6 @@ App = {
     }).then(function(tokensSold) {
       App.tokensSold = tokensSold;
       $("#tokensSold").html(App.tokensSold.toNumber());
-      $("#tokensAvailable").html(App.tokensAvailable);
     })
 
     App.contracts.Token.deployed().then(function(instance) {
@@ -90,20 +90,41 @@ App = {
     }).then(function(balance) {
       App.balance = balance;
       $("#balance").html(balance.toNumber());
+      return tokenInstance.totalSupply();
+    }).then(function(tokenSupply) {
+      App.tokenSupply = tokenSupply;
+      $("#tokenSupply").html(App.tokenSupply.toNumber());
+      return tokenInstance.symbol();
+    }).then(function(tokenSymbol) {
+      App.tokenSymbol = tokenSymbol;
+      $("#tokenSymbol").html(App.tokenSymbol);
 
       App.loading = false;
       loader.hide();
       content.show();
     })
+  },
 
-
+  buy10Tokens: function() {
+    App.buyTokens(10);
+  },
+  buy20Tokens: function() {
+    App.buyTokens(20);
+  },
+  buy50Tokens: function() {
+    App.buyTokens(50);
+  },
+  buy100Tokens: function() {
+    App.buyTokens(100);
   },
 
   buyTokens: function() {
     $("#content").hide();
     $("#loader").show();
 
+
     var numberOfTokens = $("#numberOfTokens").val();
+
     App.contracts.TokenSale.deployed().then(function(instance){
       return instance.buyTokens(numberOfTokens, {
         from: App.account,
@@ -111,11 +132,11 @@ App = {
         gasLimit: 500000,
       })
     }).then(function(result) {
-      console.log(result);
-      $("#transactionsLog").append('<li class="list-group-item">' + result + '</li>');
-      $("#form").trigger('reset');
       $("#loader").hide();
       $("#content").show();
+      console.log(result.tx);
+      $("#transactionsLog").append('<li class="list-group-item">Transaction: <a href="https://etherscan.io/tx/' + result.tx + '">' + result.tx + '</a></li>');
+      $("#form").trigger('reset');
     })
   }
 }
